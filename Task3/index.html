@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>List Item Mover</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-200 flex items-center justify-center h-screen">
+        <div class="bg-white p-10 rounded shadow-md">
+            <h1 class="text-2xl mb-6 text-center">List Item Mover</h1>
+            <ul id="itemList" class="space-y-2">
+                <li class="bg-blue-500 text-white p-2 rounded">Item 1</li>
+                <li class="bg-green-500 text-white p-2 rounded">Item 2</li>
+                <li class="bg-red-500 text-white p-2 rounded">Item 3</li>
+                <li class="bg-yellow-500 text-white p-2 rounded">Item 4</li>
+                <li class="bg-indigo-500 text-white p-2 rounded">Item 5</li>
+            </ul>
+            <div class="mt-4">
+                <button onclick="randomizeList()" class="bg-blue-500 text-white py-2 px-4 rounded">Randomize List</button>
+            </div>
+        </div>
+
+   <script>
+       let draggedItem = null;
+
+       function drop(e) {
+           e.preventDefault();
+           const targetItem = e.target.closest('li');
+           if (targetItem) {
+               const list = document.getElementById('itemList');
+               const items = Array.from(list.children);
+               const draggedIndex = items.indexOf(draggedItem);
+               const targetIndex = items.indexOf(targetItem);
+
+               if (draggedIndex !== -1 && targetIndex !== -1) {
+                   items.splice(targetIndex, 0, items.splice(draggedIndex, 1)[0]);
+                   items.forEach(item => list.appendChild(item));
+               }
+           }
+       }
+
+       function randomizeList() {
+           const list = document.getElementById('itemList');
+           const items = Array.from(list.children);
+           for (let i = items.length - 1; i > 0; i--) {
+               const j = Math.floor(Math.random() * (i + 1));
+               [items[i], items[j]] = [items[j], items[i]];
+           }
+           items.forEach(item => list.appendChild(item));
+       }
+   </script>
+</body>
+</html>
