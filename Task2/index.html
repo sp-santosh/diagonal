@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Expression Solver</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+<body class="bg-gray-200 flex items-center justify-center h-screen">
+    <div class="bg-white p-10 rounded shadow-md w-1/3">
+        <h1 class="text-2xl mb-6 text-center">Expression Solver</h1>
+        <label for="expression" class="block mb-2">Enter an expression:</label>
+        <input type="text" id="expression" class="w-full px-3 py-2 border rounded-md mb-4">
+        <button onclick="solveExpression()" class="w-full bg-blue-500 text-white py-2 rounded-md">Solve Expression</button>
+        <div id="result" class="mt-4 text-center font-bold text-4xl text-blue-500"></div>
+    </div>
+    <script>
+        
+        function solveExpression() {
+    const expression = document.getElementById('expression').value;
+    const result = evaluateExpression(expression);
+    document.getElementById('result').textContent = `Result: ${result}`;
+
+}
+
+function evaluateExpression(expression) {
+    const operatorPrecedence = {
+        '^': 3,
+        '*': 2,
+        '/': 2,
+        '+': 1,
+        '-': 1
+    };
+
+    const operators = ['^', '*', '/', '+', '-'];
+    let stack = [];
+    let operands = [];
+
+    for (let i = 0; i < expression.length; i++) {
+        const char = expression[i];
+
+        if (char >= '0' && char <= '9') {
+            let operand = char;
+            while (i + 1 < expression.length && expression[i + 1] >= '0' && expression[i + 1] <= '9') {
+                operand += expression[i + 1];
+                i++;
+            }
+            operands.push(parseFloat(operand));
+        } else if (char === '(') {
+            stack.push(char);
+        } else if (char === ')') {
+            while (stack.length > 0 && stack[stack.length - 1] !== '(') {
+                const operator = stack.pop();
+                const b = operands.pop();
+                const a = operands.pop();
+                operands.push(applyOperation(a, b, operator));
+            }
+            stack.pop(); // Remove the opening parenthesis
+        } else if (operators.includes(char)) {
+            while (stack.length > 0 && operatorPrecedence[stack[stack.length - 1]] >= operatorPrecedence[char]) {
+                const operator = stack.pop();
+                const b = operands.pop();
+                const a = operands.pop();
+                operands.push(applyOperation(a, b, operator));
+            }
+            stack.push(char);
+        }
+    }
+
+    while (stack.length > 0) {
+        const operator = stack.pop();
+        const b = operands.pop();
+        const a = operands.pop();
+        operands.push(applyOperation(a, b, operator));
+    }
+
+    return operands.pop();
+}
+
+        function applyOperation(a, b, operator) {
+            switch (operator) {
+                case '^':
+                    return Math.pow(a, b);
+                case '*':
+                    return a * b;
+                case '/':
+                    return a / b;
+                case '+':
+                    return a + b;
+                case '-':
+                    return a - b;
+            }
+        }
+    </script>
+</body>
+</html>
