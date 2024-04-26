@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Anagram Checker</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-200 flex items-center justify-center h-screen">
+        <div class="bg-white p-10 rounded shadow-md w-1/3">
+            <h1 class="text-2xl mb-6 text-center">Anagram Checker</h1>
+            <label for="string1" class="block mb-2">String 1:</label>
+            <input type="text" id="string1" class="w-full px-3 py-2 border rounded-md mb-4">
+            <label for="string2" class="block mb-2">String 2:</label>
+            <input type="text" id="string2" class="w-full px-3 py-2 border rounded-md mb-4">
+            <button onclick="checkAnagram()" class="w-full bg-blue-500 text-white py-2 rounded-md">Check Anagram</button>
+            <div id="result" class="mt-4 text-center font-bold text-4xl text-blue-500"></div>
+            </div>
+
+    <script>
+        function checkAnagram() {
+            const string1 = document.getElementById('string1').value.toLowerCase().replace(/\s/g, '');
+            const string2 = document.getElementById('string2').value.toLowerCase().replace(/\s/g, '');
+
+            if (string1.length !== string2.length) {
+                document.getElementById('result').textContent = 'Strings are not anagrams.';
+                return;
+            }
+
+            const sorted1 = string1.split('').sort().join('');
+            const sorted2 = string2.split('').sort().join('');
+
+            if (sorted1 === sorted2) {
+                document.getElementById('result').textContent = 'Strings are anagrams.';
+            } else {
+                document.getElementById('result').textContent = 'Strings are not anagrams.';
+            }
+        }
+    </script>
+</body>
+</html>
